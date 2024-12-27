@@ -102,6 +102,7 @@ const CompanySetup = () => {
                                 type="text"
                                 name="description"
                                 value={input.description}
+                                placeholder="Company description"
                                 onChange={changeEventHandler}
                             />
                         </div>
@@ -111,6 +112,7 @@ const CompanySetup = () => {
                                 type="text"
                                 name="website"
                                 value={input.website}
+                                placeholder="Company website"
                                 onChange={changeEventHandler}
                             />
                         </div>
@@ -119,6 +121,7 @@ const CompanySetup = () => {
                             <Input
                                 type="text"
                                 name="location"
+                                placeholder="Company location"
                                 value={input.location}
                                 onChange={changeEventHandler}
                             />
