@@ -22,6 +22,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         skills: user?.profile?.skills?.map(skill => skill) || "",
         file: user?.profile?.resume || ""
     });
+
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
@@ -30,7 +31,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
     const fileChangeHandler = (e) => {
         const file = e.target.files?.[0];
-        setInput({ ...input, file })
+        setInput({ ...input, file });
     }
 
     const submitHandler = async (e) => {
@@ -40,10 +41,11 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
         formData.append("bio", input.bio);
-        formData.append("skills", input.skills);
+        formData.append("skills", input.skills.join(',')); // Convert to string for submission
         if (input.file) {
             formData.append("file", input.file);
         }
+
         try {
             setLoading(true);
             const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
@@ -55,18 +57,14 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             if (res.data.success) {
                 dispatch(setUser(res.data.user));
                 toast.success(res.data.message);
+                setOpen(false); // Close dialog only after success
             }
         } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message);
-        } finally{
+            toast.error(error.response?.data?.message || 'Something went wrong');
+        } finally {
             setLoading(false);
         }
-        setOpen(false);
-        console.log(input);
     }
-
-
 
     return (
         <div>
@@ -78,10 +76,10 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                     <form onSubmit={submitHandler}>
                         <div className='grid gap-4 py-4'>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor="name" className="text-right">Name</Label>
+                                <Label htmlFor="fullname" className="text-right">Name</Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="fullname"
+                                    name="fullname"
                                     type="text"
                                     value={input.fullname}
                                     onChange={changeEventHandler}
@@ -100,10 +98,10 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 />
                             </div>
                             <div className='grid grid-cols-4 items-center gap-4'>
-                                <Label htmlFor="number" className="text-right">Number</Label>
+                                <Label htmlFor="phoneNumber" className="text-right">Number</Label>
                                 <Input
-                                    id="number"
-                                    name="number"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
                                     value={input.phoneNumber}
                                     onChange={changeEventHandler}
                                     className="col-span-3"
@@ -124,8 +122,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 <Input
                                     id="skills"
                                     name="skills"
-                                    value={input.skills}
-                                    onChange={changeEventHandler}
+                                    value={input.skills.join(',')} // Convert array to comma-separated string
+                                    onChange={(e) => setInput({ ...input, skills: e.target.value.split(',') })} // Convert back to array
                                     className="col-span-3"
                                 />
                             </div>
@@ -153,4 +151,4 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     )
 }
 
-export default UpdateProfileDialog
+export default UpdateProfileDialog;
