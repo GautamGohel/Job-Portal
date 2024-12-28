@@ -15,7 +15,7 @@ const fitlerData = [
     },
     {
         fitlerType: "Salary",
-        array: ["2-5lakh", "5-10lakh", "10-20"]
+        array: ["2-5lpa", "5-10lpa", "10-20lpa"]
     },
 ];
 
